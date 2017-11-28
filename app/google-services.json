@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "645085342940",
+    "firebase_url": "https://onimaniapp.firebaseio.com",
+    "project_id": "onimaniapp",
+    "storage_bucket": "onimaniapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:645085342940:android:7f4ddca45e20e512",
+        "android_client_info": {
+          "package_name": "com.lhg1304.onimani"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "645085342940-f1mhsft6p3m89rgvc3n7t74nufn7gfk2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lhg1304.onimani",
+            "certificate_hash": "d2e5430103adddd827850f51975ff78a72d69949"
+          }
+        },
+        {
+          "client_id": "645085342940-edgeaiand917lh2k5obmsc3746tlksp1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8X2tlcn6hegz6lGrmP6Tg92okdfRadpQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "645085342940-edgeaiand917lh2k5obmsc3746tlksp1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
