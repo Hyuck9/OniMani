@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.kakao.auth.Session;
 import com.lhg1304.onimani.common.LoginActivity;
+import com.lhg1304.onimani.views.MainActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -16,23 +17,18 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_splash);
+//        setContentView(R.layout.layout_splash);
 
-        findViewById(R.id.splash).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!Session.getCurrentSession().checkAndImplicitOpen()) {
-                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+        if (!Session.getCurrentSession().checkAndImplicitOpen()) {
+            Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
 
-                }
+        } else {
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
 
-            }
-        }, 500);
+        }
     }
 }

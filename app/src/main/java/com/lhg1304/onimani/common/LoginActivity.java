@@ -33,7 +33,6 @@ public class LoginActivity extends BaseActivity {
 
         callback = new SessionCallback();
 
-        Log.d(TAG, "onCreate");
         Session.getCurrentSession().addCallback(callback);
         Session.getCurrentSession().checkAndImplicitOpen();
     }
@@ -57,7 +56,6 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onSessionOpened() {
-            Log.d(TAG, "onSessionOpened!!!!!!!!!!!!");
              redirectSignupActivity();
         }
 

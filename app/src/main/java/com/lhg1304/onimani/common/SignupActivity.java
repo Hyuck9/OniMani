@@ -10,18 +10,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.kakao.auth.ApiResponseCallback;
 import com.kakao.auth.ErrorCode;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.helper.log.Logger;
-import com.lhg1304.onimani.MainActivity;
+import com.lhg1304.onimani.views.MainActivity;
 import com.lhg1304.onimani.R;
+import com.lhg1304.onimani.common.utils.DateUtil;
 import com.lhg1304.onimani.models.User;
-
-import java.util.Map;
 
 /**
  * 유효한 세션이 있다는 검증 후
@@ -42,39 +40,12 @@ public class SignupActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // 여기에 로딩 바 만들면 될 듯
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mUserDBRef = mFirebaseDatabase.getReference("users");
 
         requestMe();
-    }
-
-    protected void showSignup() {
-        setContentView(R.layout.layout_usermgmt_signup);
-    }
-
-    private void requestSignUp(final Map<String, String> properties) {
-        UserManagement.requestSignup(new ApiResponseCallback<Long>() {
-            @Override
-            public void onNotSignedUp() {
-            }
-
-            @Override
-            public void onSuccess(Long result) {
-                requestMe();
-            }
-
-            @Override
-            public void onFailure(ErrorResult errorResult) {
-                final String message = "UsermgmtResponseCallback : failure : " + errorResult;
-                Log.w(TAG, message);
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-                finish();
-            }
-
-            @Override
-            public void onSessionClosed(ErrorResult errorResult) {
-            }
-        }, properties);
     }
 
     /**
@@ -104,29 +75,27 @@ public class SignupActivity extends BaseActivity {
             @Override
             public void onSuccess(UserProfile userProfile) {
                 Log.d(TAG, "UserProfile : " + userProfile);
-                createUser(userProfile);
+                joinUser(userProfile);
             }
 
             @Override
             public void onNotSignedUp() {
-                showSignup();
             }
         });
     }
 
-    private void createUser(UserProfile userProfile) {
-        final User user = new User();
-        user.setEmail(userProfile.getEmail());
-        user.setNickName(userProfile.getNickname());
-        user.setUid(String.valueOf(userProfile.getId()));
-        if ( userProfile.getProfileImagePath() != null ) {
-            user.setProfileUrl(userProfile.getProfileImagePath());
-        }
-        mUserDBRef.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+    /**
+     * 파이어베이스 데이터베이스 데이터 조회 후
+     * 존재하지 않을 때 가입 처리 / 존재하면 자동 로그인 처리
+     * @param userProfile
+     */
+    private void joinUser(final UserProfile userProfile) {
+        mUserDBRef.child(String.valueOf(userProfile.getId())).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if ( !dataSnapshot.exists() ) {
-                    // 데이터가 존재하지 않을 때 회원가입
+                    // 데이터가 존재하지 않을 때 회원가입 처리 후 로그인
+                    User user = createUser(userProfile);
                     mUserDBRef.child(user.getUid()).setValue(user, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -136,7 +105,7 @@ public class SignupActivity extends BaseActivity {
                         }
                     });
                 } else {
-                    // 데이터가 존재하면 바로 메인
+                    // 데이터가 존재하면 자동 로그인
                     redirectMainActivity();
                 }
             }
@@ -146,6 +115,26 @@ public class SignupActivity extends BaseActivity {
 
             }
         });
+    }
+
+    /**
+     * 카카오에서 받은 UserProfile 객체로 User 객체 생성
+     * @param userProfile
+     * @return User
+     */
+    private User createUser(UserProfile userProfile) {
+        User user = new User();
+        user.setEmail(userProfile.getEmail());
+        user.setNickName(userProfile.getNickname());
+        user.setUid(String.valueOf(userProfile.getId()));
+        user.setJoinedDate(DateUtil.getCurrentDate());
+        if ( userProfile.getProfileImagePath() != null ) {
+            user.setProfileUrl(userProfile.getProfileImagePath());
+        }
+        if ( userProfile.getThumbnailImagePath() != null ) {
+            user.setThumbUrl(userProfile.getThumbnailImagePath());
+        }
+        return user;
     }
 
     private void redirectMainActivity() {

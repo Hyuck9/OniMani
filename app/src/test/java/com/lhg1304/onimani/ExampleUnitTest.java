@@ -1,5 +1,7 @@
 package com.lhg1304.onimani;
 
+import com.lhg1304.onimani.common.utils.DateUtil;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -13,5 +15,7 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
+
+        System.out.println(DateUtil.getCurrentDate());
     }
 }

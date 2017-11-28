@@ -7,4 +7,8 @@
     <string name="usermgmg_signup_button">가입</string>
     <string name="kakao_app_key">4055819e7c16fdd62193237094aa3a37</string>
 
+    <string name="none_friend_txt">등록된 친구가 없습니다.</string>
+
+    <string name="action_logout">로그아웃</string>
+    <string name="action_unlink">회원탈퇴</string>
 </resources>
