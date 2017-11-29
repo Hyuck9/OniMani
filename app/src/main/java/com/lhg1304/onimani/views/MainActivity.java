@@ -133,8 +133,8 @@ public class MainActivity extends BaseActivity {
 
     private void setUpViewPager() {
         mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        mPagerAdapter.addFragment(new FriendFragment(), "친구1");
-        mPagerAdapter.addFragment(new FriendFragment(), "친구2");
+        mPagerAdapter.addFragment(new AppointFragment(), "약속");
+        mPagerAdapter.addFragment(new FriendFragment(), "친구");
         mViewPager.setAdapter(mPagerAdapter);
     }
 
@@ -178,7 +178,6 @@ public class MainActivity extends BaseActivity {
 
                                             @Override
                                             public void onNotSignedUp() {
-                                                redirectSignupActivity();
                                             }
 
                                             @Override
