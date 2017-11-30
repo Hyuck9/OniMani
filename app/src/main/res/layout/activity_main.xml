@@ -30,39 +30,33 @@
     <include layout="@layout/content_main" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab3"
+        android:id="@+id/fab_create_room"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="180dp"
-        app:pressedTranslationZ="12dp"
         app:backgroundTint="@color/fab1_color"
-        android:elevation="6dp"
         android:visibility="invisible"
         app:srcCompat="@drawable/ic_add_white_24dp" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab2"
+        android:id="@+id/fab_add_friend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="100dp"
-        app:pressedTranslationZ="12dp"
         app:backgroundTint="@color/fab2_color"
-        android:elevation="6dp"
         android:visibility="invisible"
         app:srcCompat="@drawable/ic_add_white_24dp" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab1"
+        android:id="@+id/fab_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:pressedTranslationZ="12dp"
-        android:elevation="6dp"
         android:visibility="visible"
         app:srcCompat="@drawable/ic_add_white_24dp" />
 

@@ -1,3 +1,26 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+
+    <!-- elevation -->
+    <dimen name="elv_dialog">24dp</dimen>
+    <dimen name="elv_picker">24dp</dimen>
+    <dimen name="elv_nav_drawer">16dp</dimen>
+    <dimen name="elv_right_drawer">16dp</dimen>
+    <dimen name="elv_modal_bottom_sheet">16dp</dimen>
+    <dimen name="elv_floating_action_button_pressed">12dp</dimen>
+    <dimen name="elv_bottom_navigation_bar">8dp</dimen>
+    <dimen name="elv_menu">8dp</dimen>
+    <dimen name="elv_card_picked_up">8dp</dimen>
+    <dimen name="elv_raised_button_pressed">8dp</dimen>
+    <dimen name="elv_floating_action_button">6dp</dimen>
+    <dimen name="elv_snack_bar">6dp</dimen>
+    <dimen name="elv_app_bar">4dp</dimen>
+    <dimen name="elv_refresh_indicator">3dp</dimen>
+    <dimen name="elv_quick_entry_scrolled">3dp</dimen>
+    <dimen name="elv_search_bar_scrolled">3dp</dimen>
+    <dimen name="elv_card">2dp</dimen>
+    <dimen name="elv_raised_button">2dp</dimen>
+    <dimen name="elv_quick_entry">2dp</dimen>
+    <dimen name="elv_search_bar">2dp</dimen>
+    <dimen name="elv_switch">1dp</dimen>
 </resources>

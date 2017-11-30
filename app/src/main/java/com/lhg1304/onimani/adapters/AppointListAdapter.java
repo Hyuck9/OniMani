@@ -4,11 +4,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lhg1304.onimani.R;
-import com.lhg1304.onimani.customviews.RoundedImageView;
 import com.lhg1304.onimani.models.Appoint;
 
 import java.util.ArrayList;
@@ -76,16 +76,16 @@ public class AppointListAdapter extends RecyclerView.Adapter<AppointListAdapter.
 
     public static class AppointHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.appoint_item_thumb)
-        RoundedImageView appointThumbnailView;
+        @BindView(R.id.appoint_item_img)
+        ImageView appointThumbnailView;
 
         @BindView(R.id.appoint_item_title)
         TextView tvTitle;
 
-        @BindView(R.id.apppoint_item_place)
+        @BindView(R.id.appoint_item_place)
         TextView tvPlace;
 
-        @BindView(R.id.apppoint_item_time)
+        @BindView(R.id.appoint_item_time)
         TextView tvTime;
 
         @BindView(R.id.appoint_item_root_view)

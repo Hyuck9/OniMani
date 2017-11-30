@@ -9,16 +9,21 @@
         android:id="@+id/tv_none_appoint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         android:text="@string/none_appoint_txt"
         android:textAlignment="center"
         android:gravity="center" />
 
 
     <android.support.v7.widget.RecyclerView
-        android:visibility="gone"
         android:id="@+id/rv_appoint_list"
+        android:background="@color/colorBackground"
+        android:visibility="visible"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

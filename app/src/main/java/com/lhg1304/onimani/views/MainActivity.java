@@ -45,14 +45,14 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.viewpager)
     ViewPager mViewPager;
 
-    @BindView(R.id.fab1)
-    FloatingActionButton mFab1;
+    @BindView(R.id.fab_main)
+    FloatingActionButton mFabMain;
 
-    @BindView(R.id.fab2)
-    FloatingActionButton mFab2;
+    @BindView(R.id.fab_add_friend)
+    FloatingActionButton mFabAddFriend;
 
-    @BindView(R.id.fab3)
-    FloatingActionButton mFab3;
+    @BindView(R.id.fab_create_room)
+    FloatingActionButton mFabCreateRoom;
 
     private ViewPagerAdapter mPagerAdapter;
 
@@ -81,26 +81,24 @@ public class MainActivity extends BaseActivity {
 
         initalizeAnimation();
 
-        mFab1.setOnClickListener(new View.OnClickListener() {
+        mFabMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if ( !isFabOpen ) {
-                    mFab1.startAnimation(fabRClockwise);
-                    mFab2.startAnimation(fabOpen);
-                    mFab3.startAnimation(fabOpen);
-                    mFab2.setClickable(true);
-                    mFab3.setClickable(true);
+                    mFabMain.startAnimation(fabRClockwise);
+                    mFabAddFriend.startAnimation(fabOpen);
+                    mFabCreateRoom.startAnimation(fabOpen);
+                    mFabAddFriend.setClickable(true);
+                    mFabCreateRoom.setClickable(true);
                     isFabOpen = true;
                 } else {
-                    mFab1.startAnimation(fabRAntiClockWise);
-                    mFab2.startAnimation(fabClose);
-                    mFab3.startAnimation(fabClose);
-                    mFab2.setClickable(false);
-                    mFab3.setClickable(false);
+                    mFabMain.startAnimation(fabRAntiClockWise);
+                    mFabAddFriend.startAnimation(fabClose);
+                    mFabCreateRoom.startAnimation(fabClose);
+                    mFabAddFriend.setClickable(false);
+                    mFabCreateRoom.setClickable(false);
                     isFabOpen = false;
                 }
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
             }
         });
     }
@@ -110,6 +108,13 @@ public class MainActivity extends BaseActivity {
         fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
         fabRClockwise = AnimationUtils.loadAnimation(this, R.anim.rotate_clockwise);
         fabRAntiClockWise = AnimationUtils.loadAnimation(this, R.anim.rotate_anticlockwise);
+    }
+
+    private void setUpViewPager() {
+        mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        mPagerAdapter.addFragment(new AppointFragment(), "약속");
+        mPagerAdapter.addFragment(new FriendFragment(), "친구");
+        mViewPager.setAdapter(mPagerAdapter);
     }
 
     @Override
@@ -129,13 +134,6 @@ public class MainActivity extends BaseActivity {
                 break;
         }
         return true;
-    }
-
-    private void setUpViewPager() {
-        mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        mPagerAdapter.addFragment(new AppointFragment(), "약속");
-        mPagerAdapter.addFragment(new FriendFragment(), "친구");
-        mViewPager.setAdapter(mPagerAdapter);
     }
 
     /**

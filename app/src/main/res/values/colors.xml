@@ -5,6 +5,13 @@
     <color name="colorAccent">#FF4081</color>
     <color name="fab1_color">#4CAF50</color>
     <color name="fab2_color">#2196F3</color>
+    <color name="colorBackground">#FCFCFC</color>
+    <color name="lightGray">#EDEDED</color>
+    <color name="deepPurple">#7C4DFF</color>
+    <color name="materialYellow">#FFB300</color>
+    <color name="materialGreen">#00BFA5</color>
+    <color name="primaryYellow">#FFC107</color>
+    <color name="primaryDarkYellow">#FFA000</color>
 
     <!-- NEW DISIGN -->
     <color name="color1">#404040</color>
