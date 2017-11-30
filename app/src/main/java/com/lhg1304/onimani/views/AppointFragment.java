@@ -37,7 +37,7 @@ public class AppointFragment extends Fragment {
         View appointView = inflater.inflate(R.layout.fragment_appoint, container, false);
         ButterKnife.bind(this, appointView);
 
-        mAppointListAdapter = new AppointListAdapter();
+        mAppointListAdapter = new AppointListAdapter(getContext());
 
         mRecyclerView.setAdapter(mAppointListAdapter);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));

@@ -1,9 +1,12 @@
 package com.lhg1304.onimani.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,10 +25,14 @@ import butterknife.ButterKnife;
 
 public class AppointListAdapter extends RecyclerView.Adapter<AppointListAdapter.AppointHolder> {
 
+    private int lastPosition = -1;
+    private Context mContext;
+
     private ArrayList<Appoint> mAppointList;
 
-    public AppointListAdapter() {
+    public AppointListAdapter(Context context) {
         this.mAppointList = new ArrayList<>();
+        this.mContext = context;
     }
 
     public void addItem(Appoint item) {
@@ -67,11 +74,22 @@ public class AppointListAdapter extends RecyclerView.Adapter<AppointListAdapter.
         holder.tvTitle.setText(item.getTitle());
         holder.tvPlace.setText(item.getPlace());
         holder.tvTime.setText(item.getTime());
+
+        setAnimation(holder.rootView, position);
     }
 
     @Override
     public int getItemCount() {
         return mAppointList.size();
+    }
+
+
+    private void setAnimation(View view, int position) {
+        if ( position > lastPosition ) {
+            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
+            view.startAnimation(animation);
+            lastPosition = position;
+        }
     }
 
     public static class AppointHolder extends RecyclerView.ViewHolder {

@@ -1,15 +1,20 @@
 package com.lhg1304.onimani.views;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +32,7 @@ import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.helper.log.Logger;
 import com.lhg1304.onimani.R;
 import com.lhg1304.onimani.common.BaseActivity;
+import com.lhg1304.onimani.views.transitions.FabTransform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +71,8 @@ public class MainActivity extends BaseActivity {
 
     private Animation fabOpen, fabClose, fabRClockwise, fabRAntiClockWise;
 
+    public static final int FIND_FRIEND_REQUEST_CODE = 107;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +88,11 @@ public class MainActivity extends BaseActivity {
         userProfile = UserProfile.loadFromCache();
 
         initalizeAnimation();
+        setupFab();
 
+    }
+
+    private void setupFab() {
         mFabMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,6 +113,21 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+
+        mFabAddFriend.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AddFriendActivity.class);
+                int color = ContextCompat.getColor(MainActivity.this, R.color.fab2_color);;
+                FabTransform.addExtras(intent, color, R.drawable.ic_person_add_white_24dp);
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat
+                        .makeSceneTransitionAnimation(MainActivity.this,
+                                mFabAddFriend,
+                                getString(R.string.transition_name_add_friend));
+                startActivityForResult(intent, FIND_FRIEND_REQUEST_CODE, optionsCompat.toBundle());
+            }
+        });
     }
 
     private void initalizeAnimation() {
@@ -115,6 +142,22 @@ public class MainActivity extends BaseActivity {
         mPagerAdapter.addFragment(new AppointFragment(), "약속");
         mPagerAdapter.addFragment(new FriendFragment(), "친구");
         mViewPager.setAdapter(mPagerAdapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if ( requestCode == FIND_FRIEND_REQUEST_CODE ) {
+            if ( resultCode == RESULT_OK ) {
+                String inputEmail = data.getStringExtra("email");
+                Log.d("MainActivity", "onActivityResult Success!!!! : "+inputEmail+", "+mViewPager.getCurrentItem());
+                Fragment currentFragment = mPagerAdapter.getItem(1);
+                ((FriendFragment)currentFragment).addFriend(inputEmail);
+            } else {
+                Log.d("MainActivity", "onActivityResult Fail!!!!");
+            }
+        }
     }
 
     @Override

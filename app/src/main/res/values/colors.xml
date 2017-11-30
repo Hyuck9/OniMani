@@ -12,6 +12,9 @@
     <color name="materialGreen">#00BFA5</color>
     <color name="primaryYellow">#FFC107</color>
     <color name="primaryDarkYellow">#FFA000</color>
+    <color name="background_light">#FAFAFA</color>
+    <color name="scrim">#99323232</color>
+
 
     <!-- NEW DISIGN -->
     <color name="color1">#404040</color>

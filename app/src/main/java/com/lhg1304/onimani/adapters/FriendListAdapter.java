@@ -14,6 +14,9 @@ import com.lhg1304.onimani.models.User;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Nexmore on 2017-11-28.
  */
@@ -73,8 +76,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
     @Override
     public FriendHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_friend_item, parent, false);
-        FriendHolder friendHolder = new FriendHolder(view);
-        return friendHolder;
+        return new FriendHolder(view);
     }
 
     @Override
@@ -94,20 +96,22 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
 
     public static class FriendHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.friend_item_checkbox)
         CheckBox mFriendSelectedView;
 
+        @BindView(R.id.friend_item_thumb)
         RoundedImageView mThumbnailView;
 
+        @BindView(R.id.friend_item_name)
         TextView mNickNameView;
 
+        @BindView(R.id.friend_item_email)
         TextView mEmailView;
 
         private FriendHolder(View itemView) {
             super(itemView);
-            mFriendSelectedView = itemView.findViewById(R.id.friend_item_checkbox);
-            mThumbnailView = itemView.findViewById(R.id.friend_item_thumb);
-            mNickNameView = itemView.findViewById(R.id.friend_item_name);
-            mEmailView = itemView.findViewById(R.id.friend_item_email);
+
+            ButterKnife.bind(this, itemView);
         }
     }
 }
