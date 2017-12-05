@@ -43,6 +43,7 @@
     </style>
 
     <style name="AppTheme.Translucent.addFriend">
+        <item name="windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 

@@ -73,6 +73,8 @@ public class MainActivity extends BaseActivity {
 
     public static final int FIND_FRIEND_REQUEST_CODE = 107;
 
+    private boolean isFriendDeleteMode = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,20 +98,24 @@ public class MainActivity extends BaseActivity {
         mFabMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ( !isFabOpen ) {
-                    mFabMain.startAnimation(fabRClockwise);
-                    mFabAddFriend.startAnimation(fabOpen);
-                    mFabCreateRoom.startAnimation(fabOpen);
-                    mFabAddFriend.setClickable(true);
-                    mFabCreateRoom.setClickable(true);
-                    isFabOpen = true;
+                if ( isFriendDeleteMode ) {
+                    onClickFriendDelete();
                 } else {
-                    mFabMain.startAnimation(fabRAntiClockWise);
-                    mFabAddFriend.startAnimation(fabClose);
-                    mFabCreateRoom.startAnimation(fabClose);
-                    mFabAddFriend.setClickable(false);
-                    mFabCreateRoom.setClickable(false);
-                    isFabOpen = false;
+                    if ( !isFabOpen ) {
+                        mFabMain.startAnimation(fabRClockwise);
+                        mFabAddFriend.startAnimation(fabOpen);
+                        mFabCreateRoom.startAnimation(fabOpen);
+                        mFabAddFriend.setClickable(true);
+                        mFabCreateRoom.setClickable(true);
+                        isFabOpen = true;
+                    } else {
+                        mFabMain.startAnimation(fabRAntiClockWise);
+                        mFabAddFriend.startAnimation(fabClose);
+                        mFabCreateRoom.startAnimation(fabClose);
+                        mFabAddFriend.setClickable(false);
+                        mFabCreateRoom.setClickable(false);
+                        isFabOpen = false;
+                    }
                 }
             }
         });
@@ -128,6 +134,16 @@ public class MainActivity extends BaseActivity {
                 startActivityForResult(intent, FIND_FRIEND_REQUEST_CODE, optionsCompat.toBundle());
             }
         });
+    }
+
+    public void fabFriendDeleteMode() {
+        isFriendDeleteMode = true;
+        mFabMain.startAnimation(fabRClockwise);
+    }
+
+    public void fabFriendUnDeleteMode() {
+        isFriendDeleteMode = false;
+        mFabMain.startAnimation(fabRAntiClockWise);
     }
 
     private void initalizeAnimation() {
@@ -150,6 +166,9 @@ public class MainActivity extends BaseActivity {
 
         if ( requestCode == FIND_FRIEND_REQUEST_CODE ) {
             if ( resultCode == RESULT_OK ) {
+                // 친구 탭으로 이동
+                mViewPager.setCurrentItem(2, true);
+
                 String inputEmail = data.getStringExtra("email");
                 Log.d("MainActivity", "onActivityResult Success!!!! : "+inputEmail+", "+mViewPager.getCurrentItem());
                 Fragment currentFragment = mPagerAdapter.getItem(1);
@@ -237,6 +256,35 @@ public class MainActivity extends BaseActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                            }
+                        }).show();
+
+    }
+
+    /**
+     * 친구삭제
+     */
+    private void onClickFriendDelete() {
+        final String appendMessage = "친구를 삭제하시겠습니까?";
+        final FriendFragment currentFragment = (FriendFragment) mPagerAdapter.getItem(1);
+        new AlertDialog.Builder(this)
+                .setMessage(appendMessage)
+                .setPositiveButton(getString(R.string.com_kakao_ok_button),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(final DialogInterface dialog, int which) {
+                                currentFragment.deleteFriend();
+                                dialog.dismiss();
+                                fabFriendUnDeleteMode();
+                            }
+                        })
+                .setNegativeButton(getString(R.string.com_kakao_cancel_button),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                currentFragment.cancelDeleteFriend();
+                                dialog.dismiss();
+                                fabFriendUnDeleteMode();
                             }
                         }).show();
 

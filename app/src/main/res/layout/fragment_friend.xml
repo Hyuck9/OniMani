@@ -9,15 +9,16 @@
         android:id="@+id/tv_none_friend"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         android:text="@string/none_friend_txt"
         android:textAlignment="center"
         android:gravity="center" />
 
 
     <android.support.v7.widget.RecyclerView
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/rv_friend_list"
+        android:background="@color/colorBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

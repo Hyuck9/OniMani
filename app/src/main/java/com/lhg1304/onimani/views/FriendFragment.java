@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.lhg1304.onimani.R;
 import com.lhg1304.onimani.adapters.FriendListAdapter;
+import com.lhg1304.onimani.common.utils.ItemClickSupport;
 import com.lhg1304.onimani.models.User;
 
 import java.util.Iterator;
@@ -39,7 +40,7 @@ public class FriendFragment extends Fragment {
     @BindView(R.id.rv_friend_list)
     RecyclerView mRecyclerView;
 
-    private UserProfile userProfile;
+    private UserProfile mUserProfile;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMyDBRef;
     private DatabaseReference mMyFriendsDBRef;
@@ -57,20 +58,46 @@ public class FriendFragment extends Fragment {
         ButterKnife.bind(this, friendView);
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        userProfile = UserProfile.loadFromCache();
+        mUserProfile = UserProfile.loadFromCache();
 
         mAllUserDBRef   = mFirebaseDatabase.getReference("users");
-        mMyDBRef        = mFirebaseDatabase.getReference("users").child(String.valueOf(userProfile.getId()));
-        mMyFriendsDBRef = mFirebaseDatabase.getReference("users").child(String.valueOf(userProfile.getId())).child("friends");
+        mMyDBRef        = mFirebaseDatabase.getReference("users").child(String.valueOf(mUserProfile.getId()));
+        mMyFriendsDBRef = mFirebaseDatabase.getReference("users").child(String.valueOf(mUserProfile.getId())).child("friends");
         mFriendListAdapter = new FriendListAdapter();
 
-        // Firebase Database에서 친구목록을 가지고와 mFriendListAdapter에 추가
+        // 리스이클러뷰 초기 셋팅
+        initRecyclerView();
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(mFriendListAdapter);
+        // Firebase Database에서 친구목록을 가지고와 mFriendListAdapter에 추가
         addFriendListener();
 
         return friendView;
+    }
+
+    private void initRecyclerView() {
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(mFriendListAdapter);
+        // item long Click
+        ItemClickSupport.addTo(mRecyclerView).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+                final User friend = mFriendListAdapter.getItem(position);
+                if ( mFriendListAdapter.getSelectionMode() == FriendListAdapter.UNSELECTION_MODE ) {
+                    ((MainActivity)getActivity()).fabFriendDeleteMode();
+                    friend.setSelection(true);
+                    mFriendListAdapter.setSelectionMode(FriendListAdapter.SELECTION_MODE);
+                }
+                return true;
+            }
+        });
+
+        // item Click
+        ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                selectionModeItemClick(position);
+            }
+        });
     }
 
     private void initVisible() {
@@ -80,6 +107,20 @@ public class FriendFragment extends Fragment {
         } else {
             tvNoneFriend.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);
+        }
+    }
+
+    public void toggleSelectionMode() {
+        mFriendListAdapter.setSelectionMode(
+                mFriendListAdapter.getSelectionMode() == FriendListAdapter.SELECTION_MODE ? FriendListAdapter.UNSELECTION_MODE : FriendListAdapter.SELECTION_MODE
+        );
+    }
+
+    private void selectionModeItemClick(int position) {
+        final User friend = mFriendListAdapter.getItem(position);
+        if ( mFriendListAdapter.getSelectionMode() == FriendListAdapter.SELECTION_MODE ) {
+            friend.setSelection(friend.isSelection() ? false : true);
+            mFriendListAdapter.notifyItemChanged(position);
         }
     }
 
@@ -119,8 +160,15 @@ public class FriendFragment extends Fragment {
         searchFriend(inputEmail);
     }
 
+    // 친구 검색
     private void searchFriend(@NonNull final String inputEmail) {
         Log.d("FriendFragment", "E-Mail :" + inputEmail);
+
+        if ( inputEmail.equals(mUserProfile.getEmail()) ) {
+            Snackbar.make(mRecyclerView, "본인은 친구로 등록할 수 없습니다.", Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
         // 나의 정보를 조회하여 이미 등록된 친구인지 판단
         mMyFriendsDBRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -130,7 +178,7 @@ public class FriendFragment extends Fragment {
                     User user = friendsIterator.next().getValue(User.class);
 
                     if ( user.getEmail().equals(inputEmail) ) {
-                        Snackbar.make(mRecyclerView, "이미 등록된 친구입니다.", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(mRecyclerView, "이미 등록된 친구입니다.", Snackbar.LENGTH_INDEFINITE).show();
                         return;
                     }
                 }
@@ -172,8 +220,8 @@ public class FriendFragment extends Fragment {
         });
     }
 
+    // 친구 등록 로직
     private void addFriend(final User friend) {
-        // 친구 등록 로직
         // users/{내이메일}/friends/{상대방이메일}/
         mMyFriendsDBRef.push().setValue(friend, new DatabaseReference.CompletionListener() {
             @Override
@@ -195,6 +243,18 @@ public class FriendFragment extends Fragment {
                 });
             }
         });
+    }
+
+    public void deleteFriend() {
+        // TODO: 친구삭제 로직 추가!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        mFriendListAdapter.allUnSelect();
+        mFriendListAdapter.setSelectionMode(FriendListAdapter.UNSELECTION_MODE);
+    }
+
+    public void cancelDeleteFriend() {
+        mFriendListAdapter.allUnSelect();
+        mFriendListAdapter.setSelectionMode(FriendListAdapter.UNSELECTION_MODE);
     }
 
     private void drawUI(User friend) {

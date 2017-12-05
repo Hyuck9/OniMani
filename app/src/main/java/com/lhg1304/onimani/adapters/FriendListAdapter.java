@@ -1,10 +1,13 @@
 package com.lhg1304.onimani.adapters;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -53,6 +56,12 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
         return selectedCount;
     }
 
+    public void allUnSelect() {
+        for ( User user : friendList ) {
+            user.setSelection(false);
+        }
+    }
+
     public String [] getSelectedUids() {
         String [] selectedUids = new String[getSelectionUserCount()];
         int i = 0;
@@ -80,13 +89,55 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
     }
 
     @Override
-    public void onBindViewHolder(FriendHolder holder, int position) {
-        User friend = getItem(position);
+    public void onBindViewHolder(final FriendHolder holder, final int position) {
+        Log.d("test", "onBindViewHolder!!!");
+        final User friend = getItem(position);
         holder.mEmailView.setText(friend.getEmail());
         holder.mNickNameView.setText(friend.getNickName());
         if ( friend.getThumbUrl() != null ) {
             Glide.with(holder.itemView).load(friend.getThumbUrl()).into(holder.mThumbnailView);
         }
+
+        holder.mFriendSelectedView.setOnCheckedChangeListener(null);
+        holder.mFriendSelectedView.setChecked(friend.isSelection());
+
+        holder.mFriendSelectedView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                friend.setSelection(b);
+            }
+        });
+
+        if ( getSelectionMode() == UNSELECTION_MODE ) {
+            holder.mFriendSelectedView.setVisibility(View.GONE);
+        } else {
+            holder.mFriendSelectedView.setVisibility(View.VISIBLE);
+        }
+
+//        holder.mCardView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View view) {
+//                Log.d("cardview","selected cardview position : "+ position);
+//                if ( getSelectionMode() == UNSELECTION_MODE ) {
+//                    holder.mFriendSelectedView.setChecked(true);
+//                    setSelectionMode(SELECTION_MODE);
+//                }
+//                return false;
+//            }
+//        });
+//
+//        holder.mCardView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if ( getSelectionMode() == SELECTION_MODE ) {
+//                    if ( holder.mFriendSelectedView.isChecked() ) {
+//                        holder.mFriendSelectedView.setChecked(false);
+//                    } else {
+//                        holder.mFriendSelectedView.setChecked(true);
+//                    }
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -95,6 +146,9 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
     }
 
     public static class FriendHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.card_view)
+        CardView mCardView;
 
         @BindView(R.id.friend_item_checkbox)
         CheckBox mFriendSelectedView;
