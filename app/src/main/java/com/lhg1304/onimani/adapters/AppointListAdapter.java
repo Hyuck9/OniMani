@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lhg1304.onimani.R;
-import com.lhg1304.onimani.models.Appoint;
+import com.lhg1304.onimani.models.Plan;
 
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by Nexmore on 2017-11-28.
+ * Created by lhg1304 on 2017-11-28.
  */
 
 public class AppointListAdapter extends RecyclerView.Adapter<AppointListAdapter.AppointHolder> {
@@ -28,32 +28,32 @@ public class AppointListAdapter extends RecyclerView.Adapter<AppointListAdapter.
     private int lastPosition = -1;
     private Context mContext;
 
-    private ArrayList<Appoint> mAppointList;
+    private ArrayList<Plan> mPlanList;
 
     public AppointListAdapter(Context context) {
-        this.mAppointList = new ArrayList<>();
+        this.mPlanList = new ArrayList<>();
         this.mContext = context;
     }
 
-    public void addItem(Appoint item) {
-        this.mAppointList.add(item);
+    public void addItem(Plan item) {
+        this.mPlanList.add(item);
         notifyDataSetChanged();
     }
 
-    public Appoint getItem(int position) {
-        return this.mAppointList.get(position);
+    public Plan getItem(int position) {
+        return this.mPlanList.get(position);
     }
 
-    public void removeItem(Appoint item) {
-        int position = getItemPosition(item.getRoomId());
-        mAppointList.remove(position);
+    public void removeItem(Plan item) {
+        int position = getItemPosition(item.getPlanId());
+        mPlanList.remove(position);
         notifyDataSetChanged();
     }
 
     private int getItemPosition(String roomId) {
         int position = 0;
-        for ( Appoint currItem : mAppointList ) {
-            if ( currItem.getRoomId().equals(roomId) ) {
+        for ( Plan currItem : mPlanList) {
+            if ( currItem.getPlanId().equals(roomId) ) {
                 return position;
             }
             position++;
@@ -69,7 +69,7 @@ public class AppointListAdapter extends RecyclerView.Adapter<AppointListAdapter.
 
     @Override
     public void onBindViewHolder(AppointHolder holder, int position) {
-        Appoint item = getItem(position);
+        Plan item = getItem(position);
 
         holder.tvTitle.setText(item.getTitle());
         holder.tvPlace.setText(item.getPlace());
@@ -80,7 +80,7 @@ public class AppointListAdapter extends RecyclerView.Adapter<AppointListAdapter.
 
     @Override
     public int getItemCount() {
-        return mAppointList.size();
+        return mPlanList.size();
     }
 
 

@@ -31,7 +31,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".views.AddFriendActivity"
-            android:theme="@style/AppTheme.Translucent.addFriend"/>
+            android:theme="@style/AppTheme.Translucent.addFriend" />
+        <activity android:name=".views.CreateRoomActivity"></activity>
     </application>
 
 </manifest>

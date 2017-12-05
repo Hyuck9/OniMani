@@ -32,6 +32,7 @@ import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.helper.log.Logger;
 import com.lhg1304.onimani.R;
 import com.lhg1304.onimani.common.BaseActivity;
+import com.lhg1304.onimani.models.User;
 import com.lhg1304.onimani.views.transitions.FabTransform;
 
 import java.util.ArrayList;
@@ -75,6 +76,12 @@ public class MainActivity extends BaseActivity {
 
     private boolean isFriendDeleteMode = false;
 
+    private ArrayList<User> mFriendList;
+
+    public void addFriend(User friend) {
+        mFriendList.add(friend);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +95,8 @@ public class MainActivity extends BaseActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mUserDBRef = mFirebaseDatabase.getReference("users");
         userProfile = UserProfile.loadFromCache();
+
+        mFriendList = new ArrayList<>();
 
         initalizeAnimation();
         setupFab();
@@ -132,6 +141,22 @@ public class MainActivity extends BaseActivity {
                                 mFabAddFriend,
                                 getString(R.string.transition_name_add_friend));
                 startActivityForResult(intent, FIND_FRIEND_REQUEST_CODE, optionsCompat.toBundle());
+            }
+        });
+
+        mFabCreateRoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CreateRoomActivity.class);
+                intent.putExtra("myFriends", mFriendList);
+                int color = ContextCompat.getColor(MainActivity.this, R.color.fab1_color);;
+                FabTransform.addExtras(intent, color, R.drawable.ic_add_location_white_24dp);
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat
+                        .makeSceneTransitionAnimation(MainActivity.this,
+                                mFabCreateRoom,
+                                getString(R.string.transition_name_create_room));
+                startActivity(intent, optionsCompat.toBundle());
+
             }
         });
     }

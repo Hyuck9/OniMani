@@ -1,10 +1,12 @@
 package com.lhg1304.onimani.models
 
+import java.io.Serializable
+
 /**
  * Created by lhg1304 on 2017-11-27.
  */
 
-class User {
+class User : Serializable {
 
     var uid: String? = null
     var email: String? = null

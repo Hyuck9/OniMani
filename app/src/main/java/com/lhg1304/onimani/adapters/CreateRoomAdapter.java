@@ -1,8 +1,6 @@
 package com.lhg1304.onimani.adapters;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,26 +22,12 @@ import butterknife.ButterKnife;
  * Created by lhg1304 on 2017-11-28.
  */
 
-public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.FriendHolder> {
-
-    public static final int UNSELECTION_MODE = 1;
-    public static final int SELECTION_MODE = 2;
-
-    private int selectionMode = UNSELECTION_MODE;
+public class CreateRoomAdapter extends RecyclerView.Adapter<CreateRoomAdapter.FriendHolder> {
 
     private ArrayList<User> friendList;
 
-    public FriendListAdapter() {
-        this.friendList = new ArrayList<>();
-    }
-
-    public void setSelectionMode(int selectionMode) {
-        this.selectionMode = selectionMode;
-        notifyDataSetChanged();
-    }
-
-    public int getSelectionMode() {
-        return this.selectionMode;
+    public CreateRoomAdapter(ArrayList<User> list) {
+        this.friendList = list;
     }
 
     public int getSelectionUserCount() {
@@ -73,10 +57,10 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
         return selectedUids;
     }
 
-    public void addItem(User friend) {
-        this.friendList.add(friend);
-        notifyDataSetChanged();
-    }
+//    public void addItem(User friend) {
+//        this.friendList.add(friend);
+//        notifyDataSetChanged();
+//    }
 
     public User getItem(int position) {
         return this.friendList.get(position);
@@ -84,15 +68,13 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
 
     @Override
     public FriendHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_friend_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.create_room_item, parent, false);
         return new FriendHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final FriendHolder holder, final int position) {
-        Log.d("test", "onBindViewHolder!!!");
         final User friend = getItem(position);
-        holder.mEmailView.setText(friend.getEmail());
         holder.mNickNameView.setText(friend.getNickName());
         if ( friend.getThumbUrl() != null ) {
             Glide.with(holder.itemView).load(friend.getThumbUrl()).into(holder.mThumbnailView);
@@ -100,7 +82,6 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
 
         holder.mFriendSelectedView.setOnCheckedChangeListener(null);
         holder.mFriendSelectedView.setChecked(friend.isSelection());
-
         holder.mFriendSelectedView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -108,36 +89,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
             }
         });
 
-        if ( getSelectionMode() == UNSELECTION_MODE ) {
-            holder.mFriendSelectedView.setVisibility(View.GONE);
-        } else {
-            holder.mFriendSelectedView.setVisibility(View.VISIBLE);
-        }
 
-//        holder.mCardView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                Log.d("cardview","selected cardview position : "+ position);
-//                if ( getSelectionMode() == UNSELECTION_MODE ) {
-//                    holder.mFriendSelectedView.setChecked(true);
-//                    setSelectionMode(SELECTION_MODE);
-//                }
-//                return false;
-//            }
-//        });
-//
-//        holder.mCardView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if ( getSelectionMode() == SELECTION_MODE ) {
-//                    if ( holder.mFriendSelectedView.isChecked() ) {
-//                        holder.mFriendSelectedView.setChecked(false);
-//                    } else {
-//                        holder.mFriendSelectedView.setChecked(true);
-//                    }
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -147,20 +99,14 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
 
     public static class FriendHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.card_view)
-        CardView mCardView;
-
-        @BindView(R.id.friend_item_checkbox)
+        @BindView(R.id.create_room_item_checkbox)
         CheckBox mFriendSelectedView;
 
-        @BindView(R.id.friend_item_thumb)
+        @BindView(R.id.create_room_item_thumb)
         RoundedImageView mThumbnailView;
 
-        @BindView(R.id.friend_item_name)
+        @BindView(R.id.create_room_item_name)
         TextView mNickNameView;
-
-        @BindView(R.id.friend_item_email)
-        TextView mEmailView;
 
         private FriendHolder(View itemView) {
             super(itemView);
