@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +37,9 @@ public class CreateRoomActivity extends AppCompatActivity {
     @BindView(R.id.btn_create_room)
     Button mBtnOk;
 
+    @BindView(R.id.create_room_title)
+    EditText edTitle;
+
     private CreateRoomAdapter createRoomAdapter;
 
     private UserProfile mUserProfile;
@@ -47,7 +51,7 @@ public class CreateRoomActivity extends AppCompatActivity {
     private ArrayList<User> mFriendList;
 
     private String mPlanId;
-
+    private String mAddress = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +65,7 @@ public class CreateRoomActivity extends AppCompatActivity {
 //        mMemberDBRef    = mFirebaseDatabase.getReference("meeting_members");
 
         mFriendList = (ArrayList<User>) getIntent().getSerializableExtra("myFriends");
+        mAddress = getIntent().getStringExtra("address");
         createRoomAdapter = new CreateRoomAdapter(mFriendList);
         createRoomAdapter.allUnSelect();
         initRecyclerView();
@@ -71,10 +76,15 @@ public class CreateRoomActivity extends AppCompatActivity {
         mBtnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ( createRoomAdapter.getSelectionUserCount() > 0) {
-                    createRoom();
+                String title = edTitle.getText().toString();
+                if ( !title.isEmpty() ) {
+                    if ( createRoomAdapter.getSelectionUserCount() > 0) {
+                        createRoom(title);
+                    } else {
+                        Toast.makeText(CreateRoomActivity.this, "친구를 선택 해 주세요", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(CreateRoomActivity.this, "친구를 선택 해 주세요", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateRoomActivity.this, "제목을 입력해 주세요", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -94,20 +104,20 @@ public class CreateRoomActivity extends AppCompatActivity {
 
     private void selectionModeItemClick(int position) {
         final User friend = createRoomAdapter.getItem(position);
-        friend.setSelection(friend.isSelection() ? false : true);
+        friend.setSelection( !friend.isSelection() );
         createRoomAdapter.notifyItemChanged(position);
     }
 
-    private void createRoom() {
+    private void createRoom(String title) {
         final Plan plan = new Plan();
         mMyPlansDBRef = mFirebaseDatabase.getReference("users").child(String.valueOf(mUserProfile.getId())).child("plans");
         mPlanId = mMyPlansDBRef.push().getKey();
         mMemberDBRef = mFirebaseDatabase.getReference("meeting_members").child(mPlanId);
 
         plan.setPlanId(mPlanId);
-        plan.setTitle("테스트!!!!!!!!!!!!!!!!!");    //TODO: 제목 정해서 로직 넣어야함
+        plan.setTitle(title);
         plan.setTime(DateUtil.getCurrentDate());    //TODO: 약속 시간 정해서 로직 넣어야함
-        plan.setPlace("강남역 1번출구");    //TODO: 약속 장소 정해서 로직 넣어야함
+        plan.setPlace(mAddress);
 
         List<String> uidList = new ArrayList<>(Arrays.asList(createRoomAdapter.getSelectedUids()));
         uidList.add(String.valueOf(mUserProfile.getId()));
@@ -131,5 +141,7 @@ public class CreateRoomActivity extends AppCompatActivity {
                 }
             });
         }
+        // TODO: 방 생성 후 입장 로직 구현
+        finish();
     }
 }

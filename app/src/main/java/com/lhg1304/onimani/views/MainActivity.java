@@ -1,12 +1,16 @@
 package com.lhg1304.onimani.views;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -79,6 +83,9 @@ public class MainActivity extends BaseActivity {
     private ArrayList<User> mFriendList;
 
     public void addFriend(User friend) {
+        if (mFriendList == null) {
+            mFriendList = new ArrayList<>();
+        }
         mFriendList.add(friend);
     }
 
@@ -111,19 +118,9 @@ public class MainActivity extends BaseActivity {
                     onClickFriendDelete();
                 } else {
                     if ( !isFabOpen ) {
-                        mFabMain.startAnimation(fabRClockwise);
-                        mFabAddFriend.startAnimation(fabOpen);
-                        mFabCreateRoom.startAnimation(fabOpen);
-                        mFabAddFriend.setClickable(true);
-                        mFabCreateRoom.setClickable(true);
-                        isFabOpen = true;
+                        fabOpenAction();
                     } else {
-                        mFabMain.startAnimation(fabRAntiClockWise);
-                        mFabAddFriend.startAnimation(fabClose);
-                        mFabCreateRoom.startAnimation(fabClose);
-                        mFabAddFriend.setClickable(false);
-                        mFabCreateRoom.setClickable(false);
-                        isFabOpen = false;
+                        fabCloseAction();
                     }
                 }
             }
@@ -141,24 +138,53 @@ public class MainActivity extends BaseActivity {
                                 mFabAddFriend,
                                 getString(R.string.transition_name_add_friend));
                 startActivityForResult(intent, FIND_FRIEND_REQUEST_CODE, optionsCompat.toBundle());
+
             }
         });
 
         mFabCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CreateRoomActivity.class);
-                intent.putExtra("myFriends", mFriendList);
-                int color = ContextCompat.getColor(MainActivity.this, R.color.fab1_color);;
-                FabTransform.addExtras(intent, color, R.drawable.ic_add_location_white_24dp);
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat
-                        .makeSceneTransitionAnimation(MainActivity.this,
-                                mFabCreateRoom,
-                                getString(R.string.transition_name_create_room));
-                startActivity(intent, optionsCompat.toBundle());
+//                Intent intent = new Intent(MainActivity.this, CreateRoomActivity.class);
 
+                if ( permissionCheck() ) {
+                    startPlaceSelectActivity();
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PlaceSelectActivity.REQUEST_LOCATION);
+                }
             }
         });
+    }
+
+    private void fabOpenAction() {
+        mFabMain.startAnimation(fabRClockwise);
+        mFabAddFriend.startAnimation(fabOpen);
+        mFabCreateRoom.startAnimation(fabOpen);
+        mFabAddFriend.setClickable(true);
+        mFabCreateRoom.setClickable(true);
+        isFabOpen = true;
+    }
+
+    private void fabCloseAction() {
+        mFabMain.startAnimation(fabRAntiClockWise);
+        mFabAddFriend.startAnimation(fabClose);
+        mFabCreateRoom.startAnimation(fabClose);
+        mFabAddFriend.setClickable(false);
+        mFabCreateRoom.setClickable(false);
+        isFabOpen = false;
+    }
+
+    private void startPlaceSelectActivity() {
+        Intent intent = new Intent(MainActivity.this, PlaceSelectActivity.class);
+        intent.putExtra("myFriends", mFriendList);
+        /*int color = ContextCompat.getColor(MainActivity.this, R.color.fab1_color);;
+        FabTransform.addExtras(intent, color, R.drawable.ic_add_location_white_24dp);
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(MainActivity.this,
+                        mFabCreateRoom,
+                        getString(R.string.transition_name_create_room));*/
+        startActivity(intent/*, optionsCompat.toBundle()*/);
+        fabCloseAction();
     }
 
     public void fabFriendDeleteMode() {
@@ -313,6 +339,33 @@ public class MainActivity extends BaseActivity {
                             }
                         }).show();
 
+    }
+
+    private boolean permissionCheck() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // GPS 권한 거절 상태
+            return false;
+        } else {
+            // GPS 권한 승낙 상태
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if ( requestCode == PlaceSelectActivity.REQUEST_LOCATION ) {    // 위치 권한
+            if(grantResults[0] != PackageManager.PERMISSION_GRANTED){
+                // 권한 거부
+                fabCloseAction();
+            } else {
+                // 권한 승낙
+                startPlaceSelectActivity();
+            }
+
+        }
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {

@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/lightGray"
-    android:transitionName="@string/transition_name_create_room"
     tools:context="com.lhg1304.onimani.views.CreateRoomActivity">
 
     <EditText
