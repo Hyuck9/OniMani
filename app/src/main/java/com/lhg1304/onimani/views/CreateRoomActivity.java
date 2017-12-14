@@ -51,6 +51,7 @@ public class CreateRoomActivity extends AppCompatActivity {
     private ArrayList<User> mFriendList;
 
     private String mPlanId;
+    private double mLatitude, mLongitude;
     private String mAddress = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +63,11 @@ public class CreateRoomActivity extends AppCompatActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mUserDBRef      = mFirebaseDatabase.getReference("users");
         mMyPlansDBRef   = mFirebaseDatabase.getReference("users").child(String.valueOf(mUserProfile.getId())).child("plans");
-//        mMemberDBRef    = mFirebaseDatabase.getReference("meeting_members");
 
         mFriendList = (ArrayList<User>) getIntent().getSerializableExtra("myFriends");
         mAddress = getIntent().getStringExtra("address");
+        mLatitude = getIntent().getDoubleExtra("latitude", 0);
+        mLongitude = getIntent().getDoubleExtra("longitude", 0);
         createRoomAdapter = new CreateRoomAdapter(mFriendList);
         createRoomAdapter.allUnSelect();
         initRecyclerView();
@@ -118,15 +120,22 @@ public class CreateRoomActivity extends AppCompatActivity {
         plan.setTitle(title);
         plan.setTime(DateUtil.getCurrentDate());    //TODO: 약속 시간 정해서 로직 넣어야함
         plan.setPlace(mAddress);
+        plan.setLatitude(mLatitude);
+        plan.setLongitude(mLongitude);
 
         List<String> uidList = new ArrayList<>(Arrays.asList(createRoomAdapter.getSelectedUids()));
         uidList.add(String.valueOf(mUserProfile.getId()));
 
-        for ( String userId : uidList ) {
+        for (int i=0; i<uidList.size(); i++) {
+            String userId = uidList.get(i);
+            final int index = i;
             mUserDBRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(final DataSnapshot dataSnapshot) {
                     User member = dataSnapshot.getValue(User.class);
+                    member.setLatitude((double)0);
+                    member.setLongitude((double)0);
+                    member.setMemberIndex(index);
                     mMemberDBRef.child(member.getUid())
                             .setValue(member, new DatabaseReference.CompletionListener() {
                                 @Override
@@ -141,6 +150,30 @@ public class CreateRoomActivity extends AppCompatActivity {
                 }
             });
         }
+
+        /*for ( String userId : uidList ) {
+            final int[] index = {0};
+            mUserDBRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(final DataSnapshot dataSnapshot) {
+                    User member = dataSnapshot.getValue(User.class);
+                    member.setLatitude((double)0);
+                    member.setLongitude((double)0);
+                    member.setMemberIndex(index[0]++);
+                    mMemberDBRef.child(member.getUid())
+                            .setValue(member, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                    dataSnapshot.getRef().child("plans").child(mPlanId).setValue(plan);
+                                }
+                            });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }*/
         // TODO: 방 생성 후 입장 로직 구현
         finish();
     }

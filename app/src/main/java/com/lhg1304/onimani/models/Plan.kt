@@ -9,4 +9,6 @@ class Plan {
     var title: String? = null
     var place: String? = null
     var time: String? = null
+    var latitude: Double? = null
+    var longitude: Double? = null
 }

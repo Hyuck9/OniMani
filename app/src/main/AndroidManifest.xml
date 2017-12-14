@@ -7,8 +7,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <!-- 위치정보활용시 추가 -->
-     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>      <!--WIFI 상태활용시 추가-->
-     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>      <!--WIFI 상태활용시 추가-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- WIFI 상태활용시 추가 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+    <!-- WIFI 상태활용시 추가 -->
     <application
         android:name=".common.GlobalApplication"
         android:allowBackup="true"
@@ -38,7 +40,8 @@
             android:name=".views.AddFriendActivity"
             android:theme="@style/AppTheme.Translucent.addFriend" />
         <activity android:name=".views.CreateRoomActivity" />
-        <activity android:name=".views.PlaceSelectActivity"></activity>
+        <activity android:name=".views.PlaceSelectActivity" />
+        <activity android:name=".views.PlansActivity"></activity>
     </application>
 
 </manifest>

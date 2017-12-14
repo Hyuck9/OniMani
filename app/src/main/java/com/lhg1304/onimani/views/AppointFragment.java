@@ -1,6 +1,7 @@
 package com.lhg1304.onimani.views;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -87,6 +88,10 @@ public class AppointFragment extends Fragment {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 // TODO: 방 입장 (지도 보기 등)
+                Plan plan = mAppointListAdapter.getItem(position);
+                Intent intent = new Intent(getActivity(), PlansActivity.class);
+                intent.putExtra("plan_id", plan.getPlanId());
+                startActivity(intent);
             }
         });
     }

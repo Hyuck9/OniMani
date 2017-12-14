@@ -15,5 +15,7 @@ class User : Serializable {
     var thumbUrl: String? = null
     var joinedDate: String? = null
     var isSelection: Boolean = false
-
+    var latitude: Double? = null
+    var longitude: Double? = null
+    var memberIndex: Int? = null
 }
