@@ -48,6 +48,8 @@ public class FriendFragment extends Fragment {
 
     private FriendListAdapter mFriendListAdapter;
 
+    private MainActivity mainCtx;
+
     public static final int FIND_FRIEND_REQUEST_CODE = 100;
 
     @Override
@@ -57,6 +59,8 @@ public class FriendFragment extends Fragment {
         View friendView = inflater.inflate(R.layout.fragment_friend, container, false);
         ButterKnife.bind(this, friendView);
 
+        Log.d("FriendFragment", "onCreateView start!!!!!!!!");
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mUserProfile = UserProfile.loadFromCache();
 
@@ -65,6 +69,8 @@ public class FriendFragment extends Fragment {
         mMyFriendsDBRef = mFirebaseDatabase.getReference("users").child(String.valueOf(mUserProfile.getId())).child("friends");
         mFriendListAdapter = new FriendListAdapter();
 
+        mainCtx = ((MainActivity)getActivity());
+
         // 리스이클러뷰 초기 셋팅
         initRecyclerView();
 
@@ -72,6 +78,11 @@ public class FriendFragment extends Fragment {
         addFriendListener();
 
         return friendView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     private void initRecyclerView() {
@@ -83,7 +94,7 @@ public class FriendFragment extends Fragment {
             public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
                 final User friend = mFriendListAdapter.getItem(position);
                 if ( mFriendListAdapter.getSelectionMode() == FriendListAdapter.UNSELECTION_MODE ) {
-                    ((MainActivity)getActivity()).fabFriendDeleteMode();
+                    mainCtx.fabFriendDeleteMode();
                     friend.setSelection(true);
                     mFriendListAdapter.setSelectionMode(FriendListAdapter.SELECTION_MODE);
                 }
@@ -130,7 +141,7 @@ public class FriendFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 User friend = dataSnapshot.getValue(User.class);
-                ((MainActivity)getActivity()).addFriend(friend);
+                mainCtx.addFriend(friend);
                 drawUI(friend);
             }
 

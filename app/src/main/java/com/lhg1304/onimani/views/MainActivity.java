@@ -36,7 +36,9 @@ import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.helper.log.Logger;
 import com.lhg1304.onimani.R;
 import com.lhg1304.onimani.common.BaseActivity;
+import com.lhg1304.onimani.common.utils.PermissionUtils;
 import com.lhg1304.onimani.models.User;
+import com.lhg1304.onimani.services.MyLocationService;
 import com.lhg1304.onimani.views.transitions.FabTransform;
 
 import java.util.ArrayList;
@@ -84,7 +86,10 @@ public class MainActivity extends BaseActivity {
 
     public void addFriend(User friend) {
         if (mFriendList == null) {
+            Log.d("test", "mFriendList is null!!!!!");
             mFriendList = new ArrayList<>();
+        } else {
+            Log.d("test", "mFriendList.size : "+mFriendList.size());
         }
         mFriendList.add(friend);
     }
@@ -108,6 +113,16 @@ public class MainActivity extends BaseActivity {
         initalizeAnimation();
         setupFab();
 
+        Intent i = new Intent(this, MyLocationService.class);
+        startService(i);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent i = new Intent(this, MyLocationService.class);
+        stopService(i);
     }
 
     private void setupFab() {
@@ -142,16 +157,13 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        mFabCreateRoom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        mFabCreateRoom.setOnClickListener(view -> {
 //                Intent intent = new Intent(MainActivity.this, CreateRoomActivity.class);
 
-                if ( permissionCheck() ) {
-                    startPlaceSelectActivity();
-                } else {
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PlaceSelectActivity.REQUEST_LOCATION);
-                }
+            if ( PermissionUtils.permissionCheck(MainActivity.this) ) {
+                startPlaceSelectActivity();
+            } else {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PlaceSelectActivity.REQUEST_LOCATION);
             }
         });
     }
@@ -217,7 +229,7 @@ public class MainActivity extends BaseActivity {
 
         if ( requestCode == FIND_FRIEND_REQUEST_CODE ) {
             if ( resultCode == RESULT_OK ) {
-                // 친구 탭으로 이동
+               // 친구 탭으로 이동
                 mViewPager.setCurrentItem(2, true);
 
                 String inputEmail = data.getStringExtra("email");
@@ -341,16 +353,6 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    private boolean permissionCheck() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // GPS 권한 거절 상태
-            return false;
-        } else {
-            // GPS 권한 승낙 상태
-            return true;
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

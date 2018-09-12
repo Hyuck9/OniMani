@@ -133,8 +133,8 @@ public class CreateRoomActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(final DataSnapshot dataSnapshot) {
                     User member = dataSnapshot.getValue(User.class);
-                    member.setLatitude((double)0);
-                    member.setLongitude((double)0);
+                    /*member.setLatitude((double)0);
+                    member.setLongitude((double)0);*/
                     member.setMemberIndex(index);
                     mMemberDBRef.child(member.getUid())
                             .setValue(member, new DatabaseReference.CompletionListener() {
@@ -150,6 +150,8 @@ public class CreateRoomActivity extends AppCompatActivity {
                 }
             });
         }
+
+        /*mMemberDBRef.child("memberCount").setValue(uidList.size());*/
 
         /*for ( String userId : uidList ) {
             final int[] index = {0};

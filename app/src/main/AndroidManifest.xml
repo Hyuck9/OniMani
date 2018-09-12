@@ -41,7 +41,12 @@
             android:theme="@style/AppTheme.Translucent.addFriend" />
         <activity android:name=".views.CreateRoomActivity" />
         <activity android:name=".views.PlaceSelectActivity" />
-        <activity android:name=".views.PlansActivity"></activity>
+        <activity android:name=".views.PlansActivity" />
+
+        <service
+            android:name=".services.MyLocationService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

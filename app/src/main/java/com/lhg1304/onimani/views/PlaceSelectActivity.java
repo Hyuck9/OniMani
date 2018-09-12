@@ -1,10 +1,7 @@
 package com.lhg1304.onimani.views;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -41,7 +38,7 @@ public class PlaceSelectActivity extends AppCompatActivity implements /*MapView.
     @BindView(R.id.selected_location)
     ImageView mImgSelected_location;
 
-    private LocationManager locationManager;
+    /*private LocationManager locationManager;*/
 
     public final static int REQUEST_LOCATION = 100;    // 위치 권한 요청 CODE
 
@@ -90,7 +87,7 @@ public class PlaceSelectActivity extends AppCompatActivity implements /*MapView.
         });
     }
 
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -105,7 +102,7 @@ public class PlaceSelectActivity extends AppCompatActivity implements /*MapView.
             }
 
         }
-    }
+    }*/
 
     private void onFinishReverseGeoCoding(String result) {
         mAddress.setHint(result);

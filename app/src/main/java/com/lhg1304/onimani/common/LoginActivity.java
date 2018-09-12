@@ -117,12 +117,9 @@ public class LoginActivity extends BaseActivity {
                 if ( !dataSnapshot.exists() ) {
                     // 데이터가 존재하지 않을 때 회원가입 처리 후 로그인
                     User user = createUser(userProfile);
-                    mUserDBRef.child(user.getUid()).setValue(user, new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            if ( databaseError == null ) {
-                                redirectMainActivity();
-                            }
+                    mUserDBRef.child(user.getUid()).setValue(user, (databaseError, databaseReference) -> {
+                        if ( databaseError == null ) {
+                            redirectMainActivity();
                         }
                     });
                 } else {
