@@ -1,7 +1,8 @@
 package com.lhg1304.onimani.common.utils;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.lhg1304.onimani.R;
 

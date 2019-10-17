@@ -3,7 +3,8 @@ package com.lhg1304.onimani.common.utils;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
+
+import androidx.core.app.ActivityCompat;
 
 /**
  * Created by lhg1304 on 2017-12-14.

@@ -1,7 +1,8 @@
 package com.lhg1304.onimani.common;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.lhg1304.onimani.views.MainActivity;
 

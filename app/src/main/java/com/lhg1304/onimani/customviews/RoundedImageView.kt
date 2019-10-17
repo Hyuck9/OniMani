@@ -3,8 +3,8 @@ package com.lhg1304.onimani.customviews
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
-import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatImageView
 
 /**
  * Created by lhg1304 on 2017-11-28.

@@ -15,7 +15,7 @@
         android:gravity="center" />
 
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:visibility="visible"
         android:id="@+id/rv_friend_list"
         android:background="@color/colorBackground"

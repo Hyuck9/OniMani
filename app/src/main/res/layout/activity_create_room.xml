@@ -18,7 +18,7 @@
         android:padding="5dp"
         android:background="#FFF"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:visibility="visible"
         android:id="@+id/rv_add_friend_list"
         android:layout_width="match_parent"
